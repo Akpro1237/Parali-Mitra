@@ -1,0 +1,27 @@
+[
+  {
+    "Id": "PM-2611-9247",
+    "FarmerName": "AKSHAT KHANNA",
+    "Phone": "9999591859",
+    "Email": "akshatkhanna2004@gmail.com",
+    "State": "Delhi-NCR",
+    "District": "North West Delhi",
+    "TehsilOrVillage": "buy",
+    "LandAreaAcres": 20.5,
+    "CropVariety": "Paddy / Non-Basmati (PR-126/PR-121)",
+    "StubbleCondition": "Pre-Baled (Ready for loading)",
+    "EstimatedTons": 41,
+    "EstimatedPayoutInr": 86100,
+    "PreferredDate": "2026-11-25",
+    "PreferredTimeSlot": "Morning (08:00 AM - 12:00 PM)",
+    "FieldLandmark": "vg",
+    "PaymentMethod": "Direct UPI (PhonePe / GPay / Paytm)",
+    "UpiOrAccount": "999",
+    "Status": "Pending Baler Assignment",
+    "AssignedBaler": null,
+    "Notes": null,
+    "CreatedAt": "2026-11-24T06:08:40.0097763Z",
+    "EmailNotificationSent": false,
+    "EmailNotificationStatus": null
+  }
+]

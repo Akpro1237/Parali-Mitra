@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Farmer Responses & Booking Registry - ParaliMitra</title>
+  <link rel="stylesheet" href="css/portal.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Top Navigation Header -->
+  <header class="top-nav">
+    <div class="nav-container">
+      <div class="nav-brand">
+        <div class="brand-icon">📋</div>
+        <div>
+          <h1>Parali Response Registry</h1>
+          <span>Centralized Stubble Collection Intake & Lead Center</span>
+        </div>
+      </div>
+
+      <div class="nav-links">
+        <a href="http://localhost:5000/" target="_blank" class="btn btn-secondary btn-sm" style="background: #334155; color: white;">
+          🚜 Open Farmer Portal (5000)
+        </a>
+        <a href="http://localhost:5000/marketplace.html" target="_blank" class="btn btn-secondary btn-sm" style="background: #334155; color: white;">
+          🏭 Industry Demands
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+
+    <!-- KPI Metrics -->
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-label">Total Recorded Responses</div>
+        <div class="kpi-val" id="kpiTotal">0</div>
+        <div class="kpi-sub">● Clean Slate (Real-time live)</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Land Area (Acres)</div>
+        <div class="kpi-val" id="kpiAcres" style="color: #15803d;">0 Acres</div>
+        <div class="kpi-sub">Saved From Toxic Burning</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Bio-Residue Volume</div>
+        <div class="kpi-val" id="kpiTons" style="color: #0284c7;">0 Tons</div>
+        <div class="kpi-sub">Ready for Baling / Pellets</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Farmer Payouts</div>
+        <div class="kpi-val" id="kpiPayout" style="color: #b45309;">₹0</div>
+        <div class="kpi-sub">Direct Bank / UPI Value</div>
+      </div>
+    </div>
+
+    <!-- Action Toolbar (Search, Filter, Record, Clear) -->
+    <div class="toolbar-card">
+      <div class="toolbar-left">
+        <input type="text" id="searchInput" class="search-input" placeholder="🔍 Search by farmer name, phone number, village, or ID...">
+        
+        <select id="filterDistrict" class="select-filter">
+          <option value="">All Districts</option>
+        </select>
+
+        <select id="filterStatus" class="select-filter">
+          <option value="">All Statuses</option>
+          <option value="Pending Baler Assignment">Pending Baler</option>
+          <option value="Baler Assigned">Baler Assigned</option>
+          <option value="In Transit">In Transit</option>
+          <option value="Picked Up">Picked Up</option>
+          <option value="Completed">Completed</option>
+        </select>
+      </div>
+
+      <div class="toolbar-right">
+        <button type="button" class="btn btn-primary" id="btnRecordNew">
+          <span>+</span> Record Offline / Phone Response
+        </button>
+
+        <a href="/api/responses/export-csv" class="btn btn-secondary" id="btnExportCsv" title="Download spreadsheet of all responses">
+          <span>📥</span> Export to CSV
+        </a>
+
+        <button type="button" class="btn btn-danger" id="btnClearAllResponses" title="Wipe all responses from the system">
+          <span>🗑️</span> Remove All Responses
+        </button>
+      </div>
+    </div>
+
+    <!-- Main Responses Table -->
+    <div class="table-card">
+      <div class="table-header-bar">
+        <div>
+          <h2 style="font-size: 1.15rem; color: #0f172a;">All Farmer Responses & Stubble Bookings</h2>
+          <p style="font-size: 0.8rem; color: #64748b; margin-top: 2px;">Updated live as farmers book on the main portal or operators log calls.</p>
+        </div>
+        <div>
+          <span style="font-size: 0.8rem; background: #dcfce7; color: #166534; font-weight: 700; padding: 4px 10px; border-radius: 999px;">
+            ⚡ Auto-Sync Active (Every 6s)
+          </span>
+        </div>
+      </div>
+
+      <div class="table-responsive">
+        <table class="response-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Farmer Name & Contact</th>
+              <th>District & State</th>
+              <th>Land Size / Crop</th>
+              <th>Est. Yield & Payout</th>
+              <th>Pickup Slot</th>
+              <th>Baler Status</th>
+              <th>Notification</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="responseTableBody">
+            <tr>
+              <td colspan="9" style="text-align: center; padding: 2rem; color: #64748b;">Loading recorded responses...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Modal 1: Record New Response (Manual Intake) -->
+  <div class="modal-overlay" id="recordModal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 style="font-size: 1.15rem;">➕ Record New Farmer Response (Intake Form)</h3>
+        <button type="button" onclick="closeRecordModal()" style="background: none; border: none; color: white; font-size: 1.25rem; cursor: pointer;">✕</button>
+      </div>
+      <form id="intakeForm">
+        <div class="modal-body">
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label>Farmer Full Name *</label>
+              <input type="text" id="intakeName" class="form-ctrl" placeholder="e.g. Gurmail Singh" required>
+            </div>
+            <div class="form-group">
+              <label>Phone Number (10 Digits) *</label>
+              <input type="tel" id="intakePhone" class="form-ctrl" placeholder="e.g. 9876543210" pattern="[0-9]{10}" maxlength="10" required>
+            </div>
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label>Email (Optional)</label>
+              <input type="email" id="intakeEmail" class="form-ctrl" placeholder="e.g. farmer@gmail.com">
+            </div>
+            <div class="form-group">
+              <label>Land Area (Acres) *</label>
+              <input type="number" id="intakeAcres" class="form-ctrl" min="0.5" max="200" step="0.5" value="5" required>
+            </div>
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label>State *</label>
+              <select id="intakeState" class="form-ctrl" required>
+                <option value="Punjab">Punjab</option>
+                <option value="Haryana">Haryana</option>
+                <option value="Uttar Pradesh">Uttar Pradesh</option>
+                <option value="Rajasthan">Rajasthan</option>
+                <option value="Delhi-NCR">Delhi-NCR</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>District *</label>
+              <input type="text" id="intakeDistrict" class="form-ctrl" placeholder="e.g. Ludhiana / Karnal / Patiala" required>
+            </div>
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label>Village / Tehsil *</label>
+              <input type="text" id="intakeVillage" class="form-ctrl" placeholder="e.g. Village Bhamian, Tehsil Jagraon" required>
+            </div>
+            <div class="form-group">
+              <label>Field Landmark / Road Access</label>
+              <input type="text" id="intakeLandmark" class="form-ctrl" placeholder="e.g. Near Gurudwara or Tube-well #2">
+            </div>
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label>Crop Variety</label>
+              <select id="intakeCrop" class="form-ctrl">
+                <option value="Paddy / Non-Basmati (PR-126/PR-121)">Paddy / Non-Basmati (PR-126, PR-121, Pusa 44)</option>
+                <option value="Basmati Rice (Pusa 1121/1509)">Basmati Rice (Pusa 1121, 1509, 1718)</option>
+                <option value="Sugarcane Trash">Sugarcane Crop Residue</option>
+                <option value="Wheat Straw">Wheat Straw</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Stubble Condition</label>
+              <select id="intakeCondition" class="form-ctrl">
+                <option value="Loose in Field (Baler needed)">Loose in Field (Baler needed)</option>
+                <option value="Pre-Baled (Ready for transport)">Pre-Baled (Bundles ready)</option>
+                <option value="Cut with Straw Reaper">Cut with Straw Reaper</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label>Preferred Pickup Date *</label>
+              <input type="date" id="intakeDate" class="form-ctrl" required>
+            </div>
+            <div class="form-group">
+              <label>Preferred Time Slot</label>
+              <select id="intakeSlot" class="form-ctrl">
+                <option value="Morning (08:00 AM - 12:00 PM)">Morning (08:00 AM - 12:00 PM)</option>
+                <option value="Afternoon (12:00 PM - 04:00 PM)">Afternoon (12:00 PM - 04:00 PM)</option>
+                <option value="Evening (04:00 PM - 07:00 PM)">Evening (04:00 PM - 07:00 PM)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label>Payment Mode</label>
+              <select id="intakePayment" class="form-ctrl">
+                <option value="Direct UPI (PhonePe / GPay)">Direct UPI (PhonePe / GPay)</option>
+                <option value="Bank Direct Transfer (NEFT/IMPS)">Bank Direct Transfer (NEFT/IMPS)</option>
+                <option value="Cash upon Field Weighment">Cash upon Field Weighment</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>UPI ID or Bank Account No</label>
+              <input type="text" id="intakeUpi" class="form-ctrl" placeholder="e.g. 9876543210@upi or Account #">
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeRecordModal()">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="btnSubmitIntake">Save Farmer Response</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal 2: View Response Dossier -->
+  <div class="modal-overlay" id="detailsModal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 style="font-size: 1.15rem;">📄 Farmer Response Details</h3>
+        <button type="button" onclick="closeDetailsModal()" style="background: none; border: none; color: white; font-size: 1.25rem; cursor: pointer;">✕</button>
+      </div>
+      <div class="modal-body" id="detailsContent">
+        <!-- Injected dynamically -->
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" onclick="closeDetailsModal()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 3: Update Status / Baler -->
+  <div class="modal-overlay" id="statusModal">
+    <div class="modal-box" style="max-width: 480px;">
+      <div class="modal-header">
+        <h3 style="font-size: 1.15rem;">🚜 Dispatch / Update Baler Status</h3>
+        <button type="button" onclick="closeStatusModal()" style="background: none; border: none; color: white; font-size: 1.25rem; cursor: pointer;">✕</button>
+      </div>
+      <form id="statusUpdateForm">
+        <div class="modal-body">
+          <input type="hidden" id="statusApptId">
+          <div class="form-group">
+            <label>Update Status:</label>
+            <select id="statusSelect" class="form-ctrl">
+              <option value="Pending Baler Assignment">Pending Baler Assignment</option>
+              <option value="Baler Assigned">Baler Assigned (Tractor en route)</option>
+              <option value="In Transit">In Transit to Field</option>
+              <option value="Picked Up">Picked Up (Weighed on field)</option>
+              <option value="Completed">Completed (Payment disbursed)</option>
+              <option value="Cancelled">Cancelled</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Assigned Baler Machine / Driver Details:</label>
+            <input type="text" id="statusBaler" class="form-ctrl" placeholder="e.g. Baler PB-10-CD-9122 (Driver Sukhminder)">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeStatusModal()">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Status</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="js/portal.js"></script>
+</body>
+</html>

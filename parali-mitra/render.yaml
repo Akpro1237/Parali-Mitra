@@ -1,0 +1,8 @@
+services:
+  - type: web
+    name: parali-mitra
+    runtime: docker
+    plan: free
+    envVars:
+      - key: ASPNETCORE_ENVIRONMENT
+        value: Production

@@ -1,0 +1,11 @@
+{
+  "AdminEmail": "kisan-support@paralimitra.gov.in",
+  "SenderName": "ParaliMitra Stubble Alert Dispatcher",
+  "SmtpHost": "smtp.gmail.com",
+  "SmtpPort": 587,
+  "EnableSsl": true,
+  "SmtpUser": "",
+  "SmtpPass": "",
+  "SimulationMode": true,
+  "LastUpdated": "2026-11-24T05:42:58.5530514Z"
+}

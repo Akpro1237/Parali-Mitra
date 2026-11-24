@@ -1,0 +1,50 @@
+[
+  {
+    "Id": "DEM-501",
+    "BuyerName": "Panipat 2G Bio-Ethanol Plant (IOCL)",
+    "IndustryType": "Bio-Ethanol Refinery",
+    "Location": "Panipat, Haryana",
+    "RequiredTons": 12000,
+    "OfferedPricePerTon": 2400,
+    "AcceptedForm": "Baled Paddy Straw",
+    "ContactPhone": "\u002B91 180 257 8899",
+    "ExpiryDate": "2027-01-24",
+    "Status": "Active"
+  },
+  {
+    "Id": "DEM-502",
+    "BuyerName": "NTPC Jhajjar Super Thermal Power Station",
+    "IndustryType": "Thermal Power (Biomass Co-firing)",
+    "Location": "Jhajjar, Haryana",
+    "RequiredTons": 25000,
+    "OfferedPricePerTon": 2250,
+    "AcceptedForm": "Biomass Pellets / Straw Bales",
+    "ContactPhone": "\u002B91 1251 281 400",
+    "ExpiryDate": "2027-01-24",
+    "Status": "Active"
+  },
+  {
+    "Id": "DEM-503",
+    "BuyerName": "Shree Anand Bio-Pellets \u0026 Green Fuel",
+    "IndustryType": "Pellet \u0026 Briquette Manufacturer",
+    "Location": "Khanna / Ludhiana, Punjab",
+    "RequiredTons": 4500,
+    "OfferedPricePerTon": 2300,
+    "AcceptedForm": "Loose or Baled Straw",
+    "ContactPhone": "\u002B91 98721 34910",
+    "ExpiryDate": "2027-01-24",
+    "Status": "Active"
+  },
+  {
+    "Id": "DEM-504",
+    "BuyerName": "Kuantum Paper Mills \u0026 Agri Pulp",
+    "IndustryType": "Paper \u0026 Packaging Industry",
+    "Location": "Hoshiarpur, Punjab",
+    "RequiredTons": 8000,
+    "OfferedPricePerTon": 2100,
+    "AcceptedForm": "Rectangular High-Density Bales",
+    "ContactPhone": "\u002B91 1882 271 200",
+    "ExpiryDate": "2027-01-24",
+    "Status": "Active"
+  }
+]
